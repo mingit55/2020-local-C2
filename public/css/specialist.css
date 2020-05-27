@@ -1,0 +1,21 @@
+.special-item {
+    display: flex;
+    min-height: 250px;
+    padding: 1em;
+}
+
+.special-item .image {
+    flex: 0 0 200px;
+    max-width: 200px;
+    height: calc(250px - 2em);
+    background: #eee;
+}
+
+.special-item .info {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 0 0 calc(100% - 200px - 2em);
+    max-width: calc(100% - 200px - 2em);;
+    margin-left: 1.5em;
+}
