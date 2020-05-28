@@ -48,7 +48,7 @@
                         <?php endif;?>
                     </div>
                     <div class="cell-40">
-                        <p><?=nl2br(htmlentities($req->content))?></p>
+                        <p class="mb-0"><?=nl2br(htmlentities($req->content))?></p>
                     </div>
                     <div class="cell-15">
                         <span><?=$req->user_name?></span>
@@ -61,12 +61,12 @@
                         <span><?=number_format($req->cnt)?></span>
                     </div>
                     <div class="cell-10">
-                        <?php if($req->sid == null && user()->type == 'SPECIALIST'):?>
-                        <button class="black-btn px-2">
+                        <?php if($req->sid == null && user()->type == 'SPECIALIST' && array_search($req->id, $myList) === false):?>
+                        <button class="black-btn px-2" data-toggle="modal" data-target="#response-modal" data-id="<?=$req->id?>">
                             견적 보내기
                         </button>
                         <?php elseif(user()->id  === $req->uid): ?>
-                        <button class="black-btn px-2">
+                        <button class="black-btn px-2" data-toggle="modal" data-target="#view-modal" data-id="<?=$req->id?>">
                             견적 보기
                         </button>
                         <?php endif;?>
@@ -97,27 +97,35 @@
         </div>
     </div>
     <div class="list">
-        <div class="table-row">
-            <div class="cell-10">
-                <span class="fx-n1 bg-gold px-3 py-2 round text-white">진행 중</span>
+        <?php foreach($resList as $res):?>
+            <div class="table-row">
+                <div class="cell-10">
+                    <?php if($res->selected):?>
+                        <span class="fx-n1 bg-gold px-3 py-2 round text-white">선택</span>    
+                    <?php elseif($res->sid && !$res->selected):?>
+                        <span class="fx-n1 bg-gold px-3 py-2 round text-white">미선택</span>
+                    <?php else: ?>    
+                        <span class="fx-n1 bg-gold px-3 py-2 round text-white">진행 중</span>
+                    <?php endif;?>
+                </div>
+                <div class="cell-40">
+                    <p class="mb-0"><?=$res->content?></p>
+                </div>
+                <div class="cell-15">
+                    <span><?=$res->user_name?></span>
+                    <span class="text-deepgold fx-n3">(<?=$res->user_id?>)</span>
+                </div>
+                <div class="cell-15">
+                    <span class="fx-n2"><?=date("Y년 m월 d일", strtotime($res->start_date))?></span>
+                </div>
+                <div class="cell-10">
+                    <small class="text-muted">￦</small>
+                    <span class="fx-2 text-deepgold"><?=number_format($res->price)?></span>
+                </div>
+                <div class="cell-10">
+                </div>
             </div>
-            <div class="cell-40">
-                <p>주방의 리모델링이 필요합니다.</p>
-            </div>
-            <div class="cell-15">
-                <span>유저1</span>
-                <span class="text-deepgold fx-n3">(user1)</span>
-            </div>
-            <div class="cell-15">
-                <span class="fx-n2">2020년 5월 27일</span>
-            </div>
-            <div class="cell-10">
-                <small class="text-muted">￦</small>
-                <span class="fx-2 text-deepgold">100,000</span>
-            </div>
-            <div class="cell-10">
-            </div>
-        </div>
+        <?php endforeach;?>
     </div>
 </div>
 <?php endif;?>
@@ -149,3 +157,106 @@
     </div>
 </div>
 <!-- /견적 요청 모달 -->
+
+<!-- 견적 보내기 -->
+<div id="response-modal" class="modal fade">
+    <div class="modal-dialog">
+        <form action="/estimate/responses" method="post">
+            <input type="hidden" name="qid">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <strong class="fx-3 text-deepgold">견적 보내기</strong>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="price">시공 비용</label>
+                        <input type="text" id="price" class="form-control" name="price" placeholder="비용을 입력하세요">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-right">
+                        <button class="black-btn">입력 완료</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function(){
+        $("button[data-target='#response-modal']").on("click", function(){
+            let id = $(this).data("id");
+            $("#response-modal input[name='qid']").val(id);
+        });
+    });
+</script>
+<!-- /견적 보내기 -->
+
+
+<!-- 견적 보기 -->
+<div id="view-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center py-3">
+                    <strong class="fx-3 text-deepgold">받은 견적 목록</strong>
+                </div>
+                <div class="table-head">
+                    <div class="cell-40">
+                        수주자
+                    </div>
+                    <div class="cell-40">수주 금액</div>
+                    <div class="cell-20">+</div>
+                </div>
+                <div class="list">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        let qid;
+        $("button[data-target='#view-modal']").on("click", function(){
+            qid = $(this).data("id");
+
+            $.getJSON("/estimate/responses?qid=" + qid, function(res){
+                let {request, list} = res;
+
+                $("#view-modal .list").html("");
+                list.forEach(item => {
+                    let elem = $(`<div class="table-row">
+                                    <div class="cell-40">
+                                        ${item.user_name}(${item.user_id})
+                                    </div>
+                                    <div class="cell-40">
+                                        <small class="text-muted">￦</small>
+                                        <span class="fx-2 text-deepgold">${parseInt(item.price).toLocaleString()}</span>
+                                    </div>
+                                    <div class="cell-20">
+                                        ${
+                                            !request.sid ?
+                                            `<button class="black-btn" data-id="${item.id}">선택</button>`
+                                            : ""
+                                        }
+                                    </div>
+                                </div>`);
+                    $("#view-modal .list").append(elem);
+                }); 
+            });
+        });
+
+        $("#view-modal .list").on("click", "button", function(){
+            let sid = this.dataset.id;
+            $.post("/estimate/pick", {qid, sid}, function(res){
+                console.log(res);
+                alert(res.message);
+                if(res.result){
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+<!-- /견적 보기 -->
