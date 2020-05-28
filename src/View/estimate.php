@@ -38,39 +38,95 @@
             </div>
         </div>
         <div class="list">
-            <div class="table-row">
-                <div class="cell-10">
-                    <span class="fx-n1">진행 중</span>
+            <?php foreach($reqList as $req):?>
+                <div class="table-row">
+                    <div class="cell-10">
+                        <?php if($req->sid): ?>
+                            <span class="fx-n1 bg-gold px-3 py-2 round text-white">완료</span>
+                        <?php else: ?>
+                            <span class="fx-n1 bg-gold px-3 py-2 round text-white">진행 중</span>
+                        <?php endif;?>
+                    </div>
+                    <div class="cell-40">
+                        <p><?=nl2br(htmlentities($req->content))?></p>
+                    </div>
+                    <div class="cell-15">
+                        <span><?=$req->user_name?></span>
+                        <span class="text-deepgold fx-n3">(<?=$req->user_id?>)</span>
+                    </div>
+                    <div class="cell-15">
+                        <span class="fx-n2"><?=date("Y년 m월 d일", strtotime($req->start_date))?></span>
+                    </div>
+                    <div class="cell-10">
+                        <span><?=number_format($req->cnt)?></span>
+                    </div>
+                    <div class="cell-10">
+                        <?php if($req->sid == null && user()->type == 'SPECIALIST'):?>
+                        <button class="black-btn px-2">
+                            견적 보내기
+                        </button>
+                        <?php elseif(user()->id  === $req->uid): ?>
+                        <button class="black-btn px-2">
+                            견적 보기
+                        </button>
+                        <?php endif;?>
+                        
+                    </div>
                 </div>
-                <div class="cell-40">
-                    <p>주방의 리모델링이 필요합니다.</p>
-                </div>
-                <div class="cell-15">
-                    <span>유저1</span>
-                    <span class="text-deepgold fx-n3">(user1)</span>
-                </div>
-                <div class="cell-15">
-                    <span class="fx-n2">2020년 5월 27일</span>
-                </div>
-                <div class="cell-10">
-                    <span>1</span>
-                </div>
-                <div class="cell-10">
-                    <button class="black-btn px-2">
-                        견적 보내기
-                    </button>
-                </div>
-            </div>
+            <?php endforeach;?>
         </div>
     </div>
 </div>
 <!-- /시공 견적 요청 -->
 
+<!-- 보낸 견적 리스트 -->
+<?php if(user() && user()->type === 'SPECIALIST') : ?>
+<div class="container padding">
+    <div class="sticky-top bg-white">
+        <div>
+            <div class="text-muted">보낸 견적</div>
+            <div class="section-title">RESPONSE</div>
+        </div>
+        <div class="table-head mt-4">
+            <div class="cell-10">선택 여부</div>
+            <div class="cell-40">내용</div>
+            <div class="cell-15">회원 정보</div>
+            <div class="cell-15">시공일</div>
+            <div class="cell-10">입력한 비용</div>
+            <div class="cell-10">+</div>
+        </div>
+    </div>
+    <div class="list">
+        <div class="table-row">
+            <div class="cell-10">
+                <span class="fx-n1 bg-gold px-3 py-2 round text-white">진행 중</span>
+            </div>
+            <div class="cell-40">
+                <p>주방의 리모델링이 필요합니다.</p>
+            </div>
+            <div class="cell-15">
+                <span>유저1</span>
+                <span class="text-deepgold fx-n3">(user1)</span>
+            </div>
+            <div class="cell-15">
+                <span class="fx-n2">2020년 5월 27일</span>
+            </div>
+            <div class="cell-10">
+                <small class="text-muted">￦</small>
+                <span class="fx-2 text-deepgold">100,000</span>
+            </div>
+            <div class="cell-10">
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif;?>
+<!-- /보낸 견적 리스트 -->
 
 <!-- 견적 요청 모달 -->
 <div id="request-modal" class="modal fade">
     <div class="modal-dialog">
-        <form class="modal-content">
+        <form action="/estimate/requests" method="post" class="modal-content">
             <div class="modal-header">
                 <strong class="fx-3 text-deepgold">견적 요청</strong>
             </div>

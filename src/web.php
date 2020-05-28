@@ -25,5 +25,6 @@ Router::get("/specialist", "UserController@specialistPage", "user");
 Router::post("/specialist/reviews", "UserController@writeReview", "user");
 
 Router::get("/estimate", "MainController@estimatePage", "user");
+Router::post("/estimate/requests", "MainController@writeRequest", "user");
 
 Router::execute();

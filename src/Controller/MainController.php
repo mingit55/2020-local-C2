@@ -76,6 +76,19 @@ class MainController {
 
     // # 견적 페이지
     function estimatePage(){
-        view("estimate");
+        $sql = "SELECT req.*, res.cnt, U.user_name, U.user_id
+                FROM requests req 
+                LEFT JOIN (SELECT COUNT(*) cnt, qid FROM responses GROUP BY qid) res ON res.qid = req.id
+                LEFT JOIN users U ON req.uid = U.id";
+        $reqList = DB::fetchAll($sql);
+
+        view("estimate", ["reqList" => $reqList]);
+    }
+    function writeRequest(){
+        checkInput();
+        extract($_POST);
+
+        DB::query("INSERT INTO requests(uid, start_date, content) VALUES (?, ?, ?)", [user()->id, $start_date, $content]);
+        go("/estimate", "요청이 완료되었습니다.");
     }
 }
