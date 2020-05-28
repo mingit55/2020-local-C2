@@ -224,12 +224,12 @@ input[type='number'] {
 }
 
 #visual .design-line:nth-child(1){
-    right: 60vw;
+    right: 80vw;
     bottom: 120px;
 }
 
 #visual .design-line:nth-child(2){
-    left: 60vw;
+    left: 70vw;
     top: 150px;
 }
 
@@ -448,20 +448,31 @@ input[type='number'] {
 #slide-1:checked ~ #visual .label-3 { animation-name: label-2; }
 #slide-1:checked ~ #visual .label-4 { animation-name: label-3; }
 
-#slide-2:checked ~ #visual .label-1 { animation-name: label-3; }
-#slide-2:checked ~ #visual .label-2 { animation-name: label-4; }
-#slide-2:checked ~ #visual .label-3 { animation-name: label-1; }
-#slide-2:checked ~ #visual .label-4 { animation-name: label-2; }
+#slide-2:checked ~ #visual .left-btn .label-1 { animation-name: label-1; }
+#slide-2:checked ~ #visual .left-btn .label-2 { animation-name: label-2; }
+#slide-2:checked ~ #visual .left-btn .label-3 { animation-name: label-3; }
+#slide-2:checked ~ #visual .left-btn .label-4 { animation-name: label-4; }
+
+#slide-2:checked ~ #visual .right-btn .label-1 { animation-name: label-3; }
+#slide-2:checked ~ #visual .right-btn .label-2 { animation-name: label-4; }
+#slide-2:checked ~ #visual .right-btn .label-3 { animation-name: label-1; }
+#slide-2:checked ~ #visual .right-btn .label-4 { animation-name: label-2; }
+
 
 #slide-3:checked ~ #visual .label-1 { animation-name: label-2; }
 #slide-3:checked ~ #visual .label-2 { animation-name: label-3; }
 #slide-3:checked ~ #visual .label-3 { animation-name: label-4; }
 #slide-3:checked ~ #visual .label-4 { animation-name: label-1; }
 
-#slide-4:checked ~ #visual .label-1 { animation-name: label-1; }
-#slide-4:checked ~ #visual .label-2 { animation-name: label-2; }
-#slide-4:checked ~ #visual .label-3 { animation-name: label-3; }
-#slide-4:checked ~ #visual .label-4 { animation-name: label-4; }
+#slide-4:checked ~ #visual .left-btn .label-1 { animation-name: label-1; }
+#slide-4:checked ~ #visual .left-btn .label-2 { animation-name: label-2; }
+#slide-4:checked ~ #visual .left-btn .label-3 { animation-name: label-3; }
+#slide-4:checked ~ #visual .left-btn .label-4 { animation-name: label-4; }
+
+#slide-4:checked ~ #visual .right-btn .label-1 { animation-name: label-3; }
+#slide-4:checked ~ #visual .right-btn .label-2 { animation-name: label-4; }
+#slide-4:checked ~ #visual .right-btn .label-3 { animation-name: label-1; }
+#slide-4:checked ~ #visual .right-btn .label-4 { animation-name: label-2; }
 
 /* / 비주얼 영역 */
 
